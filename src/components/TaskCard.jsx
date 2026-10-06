@@ -1,6 +1,7 @@
+import AddTask from './AddTask'
 import './TaskCard.css'
 
-function TaskCard({ card, onToggle }) {
+function TaskCard({ card, onToggle, onAddTask }) {
   const completed = card.tasks.filter(
     (task) => task.completed
   ).length
@@ -31,13 +32,24 @@ function TaskCard({ card, onToggle }) {
               checked={task.completed}
               onChange={() => onToggle(card.id, task.id)}
             />
-            <span className="custom-checkbox" aria-hidden="true">
+
+            <span
+              className="custom-checkbox"
+              aria-hidden="true"
+            >
               {task.completed ? '✓' : ''}
             </span>
-            <span className="task-title">{task.title}</span>
+
+            <span className="task-title">
+              {task.title}
+            </span>
           </label>
         ))}
       </div>
+
+      <AddTask
+        onAdd={(title) => onAddTask(card.id, title)}
+      />
     </article>
   )
 }

@@ -56,39 +56,41 @@ function App() {
     )
   }
 
-  const totalTasks = cards.reduce(
-    (sum, card) => sum + card.tasks.length,
-    0
-  )
-
-  const completedTasks = cards.reduce(
-    (sum, card) =>
-      sum + card.tasks.filter((task) => task.completed).length,
-    0
-  )
+  const addTask = (cardId, title) => {
+    setCards((prevCards) =>
+      prevCards.map((card) =>
+        card.id === cardId
+          ? {
+              ...card,
+              tasks: [
+                ...card.tasks,
+                {
+                  id: crypto.randomUUID(),
+                  title,
+                  completed: false,
+                },
+              ],
+            }
+          : card
+      )
+    )
+  }
 
   return (
-    <main className="app">
-      <header className="app-header">
-        <h1>Mano užduotys</h1>
-        <p>Stebėk savo pažangą ir atliktas užduotis</p>
-      </header>
+    <div className="app">
+      <ProgressBar cards={cards} />
 
-      <section className="cards-grid" aria-label="Užduočių kortelės">
+      <div className="cards">
         {cards.map((card) => (
           <TaskCard
             key={card.id}
             card={card}
             onToggle={toggleTask}
+            onAddTask={addTask}
           />
         ))}
-      </section>
-
-      <ProgressBar
-        completed={completedTasks}
-        total={totalTasks}
-      />
-    </main>
+      </div>
+    </div>
   )
 }
 
