@@ -1,65 +1,46 @@
-#root {
-  min-height: 100vh;
-}
+CSS
 
-.app {
-  box-sizing: border-box;
-  min-height: 100vh;
-  padding: 48px 32px;
-  background: #171b24;
-  color: #f1f5f9;
-}
 
 .app-header {
-  max-width: 1100px;
-  margin: 0 auto 32px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 24px;
+  background-color: #ffffff;
+  border-bottom: 1px solid #e2e8f0;
+  margin-bottom: 24px;
 }
 
 .app-header h1 {
-  margin: 0 0 8px;
-  font-size: clamp(26px, 4vw, 34px);
-  font-weight: 700;
-  letter-spacing: -0.5px;
-}
-
-.app-header p {
   margin: 0;
-  color: #9ca8ba;
-  font-size: 15px;
+  font-size: 1.4rem;
+  color: #0f172a;
 }
 
-.cards-grid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 20px;
-  max-width: 1100px;
-  margin: 0 auto;
+.app-nav {
+  display: flex;
+  gap: 8px;
 }
 
-.progress-section {
-  max-width: 1050px;
-  margin-left: auto;
-  margin-right: auto;
+.nav-btn {
+  background: none;
+  border: 1px solid transparent;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #64748b;
+  cursor: pointer;
+  transition: all 0.2s;
 }
 
-@media (max-width: 850px) {
-  .cards-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
+.nav-btn:hover {
+  color: #1e293b;
+  background-color: #f1f5f9;
 }
 
-@media (max-width: 560px) {
-  .app {
-    padding: 28px 16px;
-  }
-
-  .cards-grid {
-    grid-template-columns: 1fr;
-    gap: 14px;
-  }
-
-  .progress-section {
-    margin-top: 20px;
-    padding: 18px;
-  }
+.nav-btn.active {
+  color: #4f46e5;
+  background-color: #eef2ff;
+  border-color: #c7d2fe;
 }
