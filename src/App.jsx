@@ -1,26 +1,69 @@
 import { useState } from 'react';
 import TaskCard from './components/TaskCard';
-import AddTask from './components/AddTask';
 import ProgressBar from './components/ProgressBar';
 import Profile from './components/Profile';
 import './App.css';
 
 export default function App() {
-  // Active Tab: 'tasks' arba 'profile'
   const [activeTab, setActiveTab] = useState('tasks');
 
-  // Vartotojo būsena
   const [user, setUser] = useState({
     name: 'Vartotojas',
     email: 'vartotojas@pavyzdys.lt',
   });
 
-  // Pradinės užduotys (pavyzdinės)
-  const [tasks, setTasks] = useState([
-    { id: crypto.randomUUID(), title: 'Sukurti MVP planą', category: 'Darbai', completed: true },
-    { id: crypto.randomUUID(), title: 'Sukurti Profile komponentą', category: 'Darbai', completed: false },
-    { id: crypto.randomUUID(), title: 'Nusipirkti maisto', category: 'Asmeniniai', completed: false },
+  // Kortelių (kategorijų) su užduotimis būsena
+  const [cards, setCards] = useState([
+    {
+      id: crypto.randomUUID(),
+      title: 'Darbai',
+      description: 'Darbo ir projekto užduotys',
+      tasks: [
+        { id: crypto.randomUUID(), title: 'Sukurti MVP planą', completed: true },
+        { id: crypto.randomUUID(), title: 'Sukurti Profile komponentą', completed: false },
+      ],
+    },
+    {
+      id: crypto.randomUUID(),
+      title: 'Asmeniniai',
+      description: 'Kasdieniai asmeniniai reikalai',
+      tasks: [
+        { id: crypto.randomUUID(), title: 'Nusipirkti maisto', completed: false },
+      ],
+    },
   ]);
+
+  // Užduoties būsenos keitimas (taip, kaip tikisi TaskCard)
+  const handleToggleTask = (cardId, taskId) => {
+    setCards((prevCards) =>
+      prevCards.map((card) => {
+        if (card.id !== cardId) return card;
+        return {
+          ...card,
+          tasks: card.tasks.map((task) =>
+            task.id === taskId ? { ...task, completed: !task.completed } : task
+          ),
+        };
+      })
+    );
+  };
+
+  // Naujos užduoties pridėjimas į konkrečią kortelę
+  const handleAddTask = (cardId, title) => {
+    if (!title.trim()) return;
+    setCards((prevCards) =>
+      prevCards.map((card) => {
+        if (card.id !== cardId) return card;
+        return {
+          ...card,
+          tasks: [
+            ...card.tasks,
+            { id: crypto.randomUUID(), title, completed: false },
+          ],
+        };
+      })
+    );
+  };
 
   const handleUpdateUser = (updatedUser) => {
     setUser(updatedUser);
@@ -28,7 +71,6 @@ export default function App() {
 
   return (
     <div className="app-container">
-      {/* Navigacijos juosta */}
       <header className="app-header">
         <h1>Mano užduotys</h1>
         <nav className="app-nav">
@@ -47,16 +89,23 @@ export default function App() {
         </nav>
       </header>
 
-      {/* Turinys priklausomai nuo pasirinkto kortelės/rodinio */}
       <main className="app-main">
         {activeTab === 'tasks' ? (
           <div className="tasks-view">
-            <ProgressBar tasks={tasks} />
-            <AddTask tasks={tasks} setTasks={setTasks} />
-            <TaskCard tasks={tasks} setTasks={setTasks} />
+            <ProgressBar cards={cards} />
+            <div className="cards-grid">
+              {cards.map((card) => (
+                <TaskCard
+                  key={card.id}
+                  card={card}
+                  onToggle={handleToggleTask}
+                  onAddTask={handleAddTask}
+                />
+              ))}
+            </div>
           </div>
         ) : (
-          <Profile user={user} onUpdateUser={handleUpdateUser} tasks={tasks} />
+          <Profile user={user} onUpdateUser={handleUpdateUser} cards={cards} />
         )}
       </main>
     </div>

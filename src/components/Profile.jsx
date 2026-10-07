@@ -1,15 +1,17 @@
 import { useState } from 'react';
 import './Profile.css';
 
-export default function Profile({ user, onUpdateUser, tasks = [] }) {
+export default function Profile({ user, onUpdateUser, cards = [] }) {
   const [name, setName] = useState(user.name);
   const [email, setEmail] = useState(user.email);
   const [isSaved, setIsSaved] = useState(false);
 
-  // Statistikos skaičiavimas iš užduočių sąrašo
-  const totalTasks = tasks.length;
-  const completedTasks = tasks.filter((t) => t.completed).length;
-  const completionPercentage = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
+  // Visų kortelių užduočių apjungimas ir statistikos skaičiavimas
+  const allTasks = cards.flatMap((card) => card.tasks || []);
+  const totalTasks = allTasks.length;
+  const completedTasks = allTasks.filter((t) => t.completed).length;
+  const completionPercentage =
+    totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -20,7 +22,6 @@ export default function Profile({ user, onUpdateUser, tasks = [] }) {
 
   return (
     <div className="profile-container">
-      {/* 1. Antraštė su avataru */}
       <div className="profile-card profile-header-card">
         <div className="avatar">
           {name ? name.charAt(0).toUpperCase() : 'U'}
@@ -31,7 +32,6 @@ export default function Profile({ user, onUpdateUser, tasks = [] }) {
         </div>
       </div>
 
-      {/* 2. Statistikos sekcija */}
       <div className="profile-card profile-stats">
         <h3>Veiklos statistika</h3>
         <div className="stats-grid">
@@ -50,7 +50,6 @@ export default function Profile({ user, onUpdateUser, tasks = [] }) {
         </div>
       </div>
 
-      {/* 3. Redagavimo forma */}
       <div className="profile-card profile-settings">
         <h3>Redaguoti profilį</h3>
         <form onSubmit={handleSubmit} className="profile-form">
@@ -80,7 +79,9 @@ export default function Profile({ user, onUpdateUser, tasks = [] }) {
             Išsaugoti pakeitimus
           </button>
 
-          {isSaved && <p className="success-message">Duomenys sėkmingai atnaujinti!</p>}
+          {isSaved && (
+            <p className="success-message">Duomenys sėkmingai atnaujinti!</p>
+          )}
         </form>
       </div>
     </div>
