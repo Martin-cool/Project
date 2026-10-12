@@ -1,7 +1,7 @@
 import AddTask from './AddTask'
 import './TaskCard.css'
 
-function TaskCard({ card, onToggle, onAddTask }) {
+function TaskCard({ card, onToggle, onAddTask, onDeleteTask }) {
   const completed = card.tasks.filter(
     (task) => task.completed
   ).length
@@ -21,29 +21,51 @@ function TaskCard({ card, onToggle, onAddTask }) {
 
       <div className="task-list">
         {card.tasks.map((task) => (
-          <label
-            className={`task-item ${
-              task.completed ? 'completed' : ''
-            }`}
-            key={task.id}
-          >
-            <input
-              type="checkbox"
-              checked={task.completed}
-              onChange={() => onToggle(card.id, task.id)}
-            />
-
-            <span
-              className="custom-checkbox"
-              aria-hidden="true"
+          <div key={task.id} className="task-item-wrapper" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <label
+              className={`task-item ${
+                task.completed ? 'completed' : ''
+              }`}
             >
-              {task.completed ? '✓' : ''}
-            </span>
+              <input
+                type="checkbox"
+                checked={task.completed}
+                onChange={() => onToggle(card.id, task.id)}
+              />
 
-            <span className="task-title">
-              {task.title}
-            </span>
-          </label>
+              <span
+                className="custom-checkbox"
+                aria-hidden="true"
+              >
+                {task.completed ? '✓' : ''}
+              </span>
+
+              <span className="task-title">
+                {task.title}
+              </span>
+            </label>
+
+            {/* Ištrynimo mygtukas */}
+            {onDeleteTask && (
+              <button
+                type="button"
+                className="delete-task-btn"
+                onClick={() => onDeleteTask(card.id, task.id)}
+                title="Ištrinti užduotį"
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  color: '#ef4444',
+                  cursor: 'pointer',
+                  fontSize: '1.1rem',
+                  padding: '4px 8px',
+                  lineHeight: 1
+                }}
+              >
+                ✕
+              </button>
+            )}
+          </div>
         ))}
       </div>
 
